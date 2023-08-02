@@ -1,0 +1,31 @@
+<template>
+        <div>
+          <div class="slds-form-element">
+              <div class="slds-form-element__control">
+                  <div class="slds-combobox_container">
+                      <div id="box2" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                          <lightning-input class="slds-m-bottom_small" data-id="search-input" type=Search label={searchLabel} value={selectedName} onchange={inputChanged} onkeyup={handleKeyChange} disabled={searchDisabled}>  
+                          </lightning-input>
+                      </div>
+                          <template if:true={showoptions}>  
+                              <template if:true={records}>
+                         
+                                  <div id="listbox-id-2" class="slds-dropdown  slds-dropdown_fluid" role="listbox">
+                                      <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                          <template for:each={records} for:item="record">
+                                              <template if:true={record}>
+                                                   <!--{record.Id}-->
+                                                  <c-look-up-item-server  key={record.Id} record={record} onlookupselect={handlelookupselect} ></c-look-up-item-server> 
+                                               </template>  
+                                          </template>
+                                      </ul>
+                                  </div>
+                              </template>
+                          </template>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</template>

@@ -1,0 +1,93 @@
+<template>
+    <article class="slds-card slds-m-around_small">
+		<div class="slds-card__header">
+			<header class="slds-media slds-media_center slds-has-flexi-truncate slds-box slds-theme--shade">
+				<div class="slds-media__body">
+					<h1 class="slds-card__header-title slds-text-heading_large">
+						Mass Lead Conversion Page
+					</h1>
+				</div>
+			</header>
+			<div class="slds-card__body slds-card__body_inner slds-m-around_small">
+				<template if:true={lead}>
+					<div class="slds-page-header__title">Primary Lead: {leadName}</div>
+				</template>
+				<lightning-layout class="slds-m-top_large">
+					<!--contact-->
+					<lightning-layout-item size='4'>
+						<h2 class="slds-text-heading_small slds-m-bottom_small">Contact</h2>
+						<c-custom-radio-button option1="Create New" option2="Select Existing" onselected={changetoggle} typeobj='con' id="conId" checkedop1={checkedCon1} checkedop2={checkedCon2}></c-custom-radio-button>
+							<template if:true={conToggle}>
+								<lightning-layout multiple-rows="true">	
+									<lightning-layout-item size='8'>
+										<c-autocomplete-search-server search-label="Contact"
+											data-id="conId"
+											value={selectedConId}
+											selected-name={selectedContactName}
+											search-field="Name"
+											selectedsobject="Contact"
+											is-required="true"
+											record-limit="10"
+											onlookupselect={handleConChange}
+											onunlookupselect={clearExistingCon}
+											>
+										</c-autocomplete-search-server>
+									</lightning-layout-item>
+									<lightning-layout-item size='12' class="slds-p-right_medium">
+										<c-tiles records={matchingContacts} data-id="tileConId" fields-to-display={contactMapFields} object-name="conName" tile-title={contactsLength} selected-rec-id={selectedConId} ontileselect={handleSelectedContact}></c-tiles>
+									</lightning-layout-item>
+								</lightning-layout>
+							</template>
+					</lightning-layout-item>
+					<!--account-->
+					<lightning-layout-item size='4'>
+						<h2 class="slds-text-heading_small slds-m-bottom_small">Account</h2>
+						<c-custom-radio-button option1="Create New" option2="Select Existing" onselected={changetoggle} typeobj='acc' disableoption={disableAccount} id="accid" checkedop1={checkedAC1} checkedop2={checkedAC2}></c-custom-radio-button>
+						<lightning-layout>
+							<lightning-layout-item size='8'>
+								<template if:true ={accToggle}> <!--search-disabled={accSearchDisabled}-->
+									<c-autocomplete-search-server search-label="Account"
+												search-disabled={accSearchDisabled}
+												data-id="accountId"
+												value={selectedAccountId}
+												search-field="Name"
+												selectedsobject="Account"
+												is-required="true"
+												record-limit="10"
+												selected-name={accountSelectedName}
+												onlookupselect={handleAccountChange}
+												onunlookupselect ={handleClearAccount}>
+									</c-autocomplete-search-server>
+								</template>
+								<template if:false ={accToggle}>
+									<lightning-input value={accountSelectedName} label="Account Name"  onchange={changeAcountName} required="true"></lightning-input>
+								</template>
+							</lightning-layout-item>
+						</lightning-layout>		
+					</lightning-layout-item>
+					<!--Opportuninty-->
+					<lightning-layout-item size='4'>
+						<h2 class="slds-text-heading_small slds-m-bottom_small">Opportunity</h2>
+						<c-custom-radio-button option1 ="Create New" option2="Select Existing" onselected ={changetoggle} typeobj='opp' disableoption={disableOppRb} id="oppId" checkedop1={checkedOp1} checkedop2={checkedOp2} hide-option2={hideOppOption2}></c-custom-radio-button> <!--noOpps-->
+						<lightning-input label="Don't create an opportunity upon conversion" type="checkbox" checked={noCreatingOpp} onchange={handleNoOppsCreate}> </lightning-input>
+							<template if:true={oppToggle}>
+								<div style={showOppDetails}>
+									<c-tiles records={matchingOpps} data-id="tileOppId" fields-to-display={oppMapFields} object-name="oppName" tile-title={oppsLength} ontileselect={handleSelectedOpp}></c-tiles>
+								</div>
+							</template>
+							<template if:false ={oppToggle}>
+								<lightning-layout>
+									<lightning-layout-item class="slds-size_8-of-12">
+										<lightning-input value={opportunitySelectedName} label="Opportunity Name" onchange={changeOppName} required={oppInputReq} style={showOppDetails}></lightning-input> <!---->
+									</lightning-layout-item>
+								</lightning-layout>
+							</template>
+					</lightning-layout-item>
+				</lightning-layout>
+				<template if:true={recordId}>
+					<c-lead-Convert-Datatable record-id={recordId} associated-account-id={associatedAccountId}  no-create-opp={noCreatingOpp} onconvert={handleConvert} ></c-lead-Convert-Datatable>
+				</template>
+			</div>
+		</div>
+	</article>
+</template>

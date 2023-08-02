@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>LeadConvertAccess</aura:description>
+	<aura:example name="LeadConvertAccess" ref="LeadConvertAccess" label="Label">
+		redirects to the convert lead lwc 
+	</aura:example>
+</aura:documentation>

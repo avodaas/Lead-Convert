@@ -1,0 +1,27 @@
+<template>
+    <template if:true={runningRecords}>
+        {tileTitle}
+            <template if:true={showTiles}>
+            <lightning-layout class="slds-scrollable" style="max-height:170px;width:100%" multiple-rows="true">
+                <template for:each={runningRecords} for:item="item">
+                        <lightning-layout-item key={item.Id} class="slds-size_5-of-12 slds-m-around_small">
+                            <div class="slds-box" onmouseover={mouseOverTile} onmouseout={mouseOutOfTile} onclick={checkRadioButton} data-id={item.Id}>
+                               <lightning-layout>
+                                    <lightning-layout-item class="slds-p-right_x-small slds-size_2-of-12">
+                                        <input class="slds-p-right_x-small" type="radio" data-id={item.Id} data-name={objectName} value={item.Id} name={item.Id} onchange={handleSelectedItem} />
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-size_10-of-12">
+                                        <template for:each={item.fields} for:item="field">
+                                            <template if:true={field.displayField}>
+                                                <p key={field.label}>{field.label} : {field.value}</p>
+                                            </template>
+                                        </template>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </template>
+    </template>
+</template>
