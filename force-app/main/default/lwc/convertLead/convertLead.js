@@ -31,14 +31,15 @@ import CONTACT_ID from '@salesforce/schema/Contact.Id';
 import CONTACT_NAME from '@salesforce/schema/Contact.Name';
 import CONTACT_ACCOUNTNAME from '@salesforce/schema/Contact.Account.Name';
 import CONTACT_ACCOUNTID from '@salesforce/schema/Contact.AccountId';
+import CONTACT_ACCOUNTTYPE from '@salesforce/schema/Contact.Account.Type';
 import CONTACT_PHONE from '@salesforce/schema/Contact.Phone';
 import CONTACT_EMAIL from '@salesforce/schema/Contact.Email';
 import CONTACT_TITLE from '@salesforce/schema/Contact.Title';
 
 const fields = [LEAD_NAME, LEAD_ACCOUNT_FIELD, LEAD_EMAIL];
 const accountFields = [ACCOUNT_NAME_FIELD];
-const contactApiFields = [CONTACT_ID, CONTACT_NAME, CONTACT_ACCOUNTID, CONTACT_ACCOUNTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_TITLE]; //CONTACT_ACCOUNTNAME
-const CONTACT_FIELDS = [CONTACT_ID.fieldApiName, CONTACT_NAME.fieldApiName, CONTACT_TITLE.fieldApiName, CONTACT_ACCOUNTNAME.fieldApiName, CONTACT_PHONE.fieldApiName, CONTACT_EMAIL.fieldApiName, CONTACT_ACCOUNTID.fieldApiName];
+const contactApiFields = [CONTACT_ID, CONTACT_NAME, CONTACT_ACCOUNTID, CONTACT_ACCOUNTTYPE, CONTACT_ACCOUNTNAME, CONTACT_PHONE, CONTACT_EMAIL, CONTACT_TITLE]; //CONTACT_ACCOUNTNAME
+const CONTACT_FIELDS = [CONTACT_ID.fieldApiName, CONTACT_NAME.fieldApiName, CONTACT_TITLE.fieldApiName, CONTACT_ACCOUNTTYPE.fieldApiName, CONTACT_ACCOUNTNAME.fieldApiName, CONTACT_PHONE.fieldApiName, CONTACT_EMAIL.fieldApiName, CONTACT_ACCOUNTID.fieldApiName];
 const TEXT_SELECTED_CONTACTS = ' Contacts Match by email';
 const TEXT_MATCHING_CONTACTS = ' potential matches';
 
@@ -126,7 +127,7 @@ export default class ConvertLead extends LightningElement {
 	getSelectedContact({data, error}){
 		if (data){
 			this.selectedContact = data;
-			const con = {Id: this.addContactId, Name: this.contactName, AccountName: this.contactAccountName ,Account: {Name: this.contactAccountName , Id: this.contactAccountId}, AccountId: this.contactAccountId,  Email: this.contactEmail, Phone: this.contactPhone, Title: this.contactTitle};
+			const con = {Id: this.addContactId, Name: this.contactName, AccountType: this.contactAccountType, AccountName: this.contactAccountName ,Account: {Name: this.contactAccountName , Type: this.contactAccountType, Id: this.contactAccountId}, AccountId: this.contactAccountId,  Email: this.contactEmail, Phone: this.contactPhone, Title: this.contactTitle};
 			this.selectedContactsIds.push(this.addContactId); // for clearing out when checking new contact 
 			this.matchingContacts = [...this.matchingContacts, con];
 			this.populateAccount(); // populate matching account on the drop down
@@ -157,6 +158,10 @@ export default class ConvertLead extends LightningElement {
 
 	get contactAccountName(){
 		return  getFieldValue(this.selectedContact, CONTACT_ACCOUNTNAME);
+	}
+
+	get contactAccountType(){
+		return  getFieldValue(this.selectedContact, CONTACT_ACCOUNTTYPE);
 	}
 
 	get contactName(){

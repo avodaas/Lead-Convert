@@ -36,7 +36,6 @@ export default class Tiles extends LightningElement {
     }
 
     setRecords(){
-        console.log('setRecords');
         let newRecId;
         if(!this._records) return;
         let apiFields = Object.getOwnPropertyNames(this._fieldsToDisplay);

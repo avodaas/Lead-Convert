@@ -1,4 +1,5 @@
 import { LightningElement, track, api, wire } from 'lwc';
+import { updateRecord, getRecord, getFieldValue} from 'lightning/uiRecordApi';
 import getLeads from '@salesforce/apex/ConvertLeadController.getLeads';
 import { refreshApex } from '@salesforce/apex';
 import convertLeads from '@salesforce/apex/ConvertLeadController.convertLeads';
@@ -7,6 +8,7 @@ import { SUCCESS, WARNING, ERROR, showToastMessage } from 'c/jsUtils';
 import { NavigationMixin } from 'lightning/navigation';
 
 const OPP_PREFIX = '006';
+const FIELDS_TO_RETRIEVE  = ['Lead.Company', 'Lead.Website'];
 export default class LeadConvertDatatable extends NavigationMixin(LightningElement)  { //
 
     isOppValid;
@@ -16,15 +18,17 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
     @api noCreateOpp;
 
     accId;
+    companyName;
+    companyWebsite;
     navigateRecId;
     error;
     isLoading = false;
     showConvert = true;
     value = 'Yes';
     options = [{label: 'Yes', value: 'Yes'}, {label: 'No', value: 'No'}];
-    @track leads = [];
+    leads = [];
     showDataTable = false;
-    @track draftValues = [];
+    draftValues = [];
     @track wireResult;
     isConvertAll = false;
     isOppAll = false;
@@ -46,11 +50,25 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
         { label: 'Status', fieldName: 'Status', type: 'text'}
     ];
 
-    @wire(getLeads, {associatedAccountId: '$associatedAccountId', currentLeadId: '$recordId' })
+    @wire(getRecord, { recordId: '$recordId', fields: FIELDS_TO_RETRIEVE })
+    wireRec({ error, data }) {
+        if (data) {
+            this.companyName = data.fields.Company.value;
+            this.companyWebsite = data.fields.Website.value;
+        }
+        else if (error) {
+            console.log('error' + JSON.stringify(error));
+            this.error = error;
+        }
+    }
+
+    @wire(getLeads, {associatedAccountId: '$associatedAccountId', companyName: '$companyName', website: '$companyWebsite', currentLeadId: '$recordId' })
     wiredLeads(result){
+        console.log('json' + JSON.stringify(result));
         this.wireResult = result;
         const { data, error } = result;
         if(data) {
+            console.log('json data' + JSON.stringify(data));
             let selectedToConvert = 0;
             let selectedToOpps = 0;
             this.leads = data.map(row => {
@@ -60,7 +78,6 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
                 let owner = row.Owner.Alias;
                 return {...row, owner}
             })
-            console.log('leads are here ' + JSON.stringify(this.leads));
             if(this.leads.length != 0){
                 this.showDataTable = true;
                 //if all leads are selected to convert already - unselect all
@@ -208,7 +225,6 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
 
     @api
     convertToLead(account, opp, conId){
-        console.log('convertToLead');
         this.isLoading = true;
         let isvalid = true;
         let rows = [];

@@ -2,9 +2,9 @@
     <template if:true={runningRecords}>
         {tileTitle}
             <template if:true={showTiles}>
-            <lightning-layout class="slds-scrollable" style="max-height:170px;width:100%" multiple-rows="true">
+            <lightning-layout  multiple-rows="true">
                 <template for:each={runningRecords} for:item="item">
-                        <lightning-layout-item key={item.Id} class="slds-size_5-of-12 slds-m-around_small">
+                        <lightning-layout-item key={item.Id} class="slds-size_10-of-12 slds-m-around_small">
                             <div class="slds-box" onmouseover={mouseOverTile} onmouseout={mouseOutOfTile} onclick={checkRadioButton} data-id={item.Id}>
                                <lightning-layout>
                                     <lightning-layout-item class="slds-p-right_x-small slds-size_2-of-12">

@@ -1,18 +1,18 @@
 public with sharing class ConvertLeadController {
 
 	public static final String CLASS_NAME = ConvertLeadController.class.getName();
-
 	
 
 	@AuraEnabled(cacheable=true)
-	public static List<Lead> getLeads(Id associatedAccountId, Id currentLeadId){
+	public static List<Lead> getLeads(Id associatedAccountId, String companyName, String website, Id currentLeadId){
 		return [SELECT Id, Name, Website, Country, State, LeadSource, To_Convert__c, Email, 
-				Owner.Alias, To_Opp__c, Associated_Account__c, City, Company, Status, To_Company__c, ZI_Job_Title__c
-				FROM Lead
-				WHERE Associated_Account__c <> NULL AND Associated_Account__c =: associatedAccountId 
-				AND IsConverted = false AND Id != :currentLeadId  WITH SECURITY_ENFORCED];
+			Owner.Alias, To_Opp__c, Associated_Account__c, City, Company, Status, To_Company__c, ZI_Job_Title__c
+			FROM Lead
+			WHERE ((Associated_Account__c <> NULL AND Associated_Account__c =: associatedAccountId) OR Company =: companyName OR (Website != null AND Website =: website))
+			AND IsConverted = false AND Id != :currentLeadId  WITH SECURITY_ENFORCED];
 	}
 	
+// returns all Opportunities that the account Id = accId	
 	@AuraEnabled(cacheable=true)
 	public static List<Opportunity> getAccRelatedOpps(String accId){
 		if(String.isBlank(accId)) return new List<Opportunity>();
@@ -27,9 +27,11 @@ public with sharing class ConvertLeadController {
 	}
 
 
+  /*
+    * searches (using SOSL) for all contacts with that matces the filters 
+    */
 	@AuraEnabled(cacheable=true)
 	public static List<Contact> getSOSLRecords(String searchString, String fieldType, String selectedSObject, List<String> fieldsToReturn, Integer recordLimit){
-		system.debug('getSOSLRecords');
 		SoslUtil.SoslResult soslRes = SoslUtil.getSOSLRecords(searchString, fieldType, selectedSObject, fieldsToReturn, recordLimit);
 		if(soslRes == null) return new List<Contact>();
 		return (List<Contact>)soslRes.getResults(selectedSObject);
@@ -90,7 +92,7 @@ public with sharing class ConvertLeadController {
 				}
 			} else {
 				//Database.rollback(sp);
-				throw new AuraHandledException('Main lead did not convert successfully. Error message is: \n' + ApxUtil.AvodaasLogsLcrErrors(new List<Database.LeadConvertResult>{lcr}));
+				throw new AuraHandledException('Main lead did not convert successfully. Error message is: \n' + ApxUtil.errorLogsLcrErrors(new List<Database.LeadConvertResult>{lcr}));
 			}
 		} catch (Exception e) {
 			Database.rollback(sp);
@@ -133,7 +135,7 @@ public with sharing class ConvertLeadController {
 					contactToLeadIds.put(lcr.getContactId(), lcr.getLeadId());
 				} else {
 					//Database.rollback(sp);
-					throw new AuraHandledException('Main lead did not convert successfully. Error message is: \n' + ApxUtil.AvodaasLogsLcrErrors(new List<Database.LeadConvertResult>{lcr}));
+					throw new AuraHandledException('Main lead did not convert successfully. Error message is: \n' + ApxUtil.errorLogsLcrErrors(new List<Database.LeadConvertResult>{lcr}));
 				}
 			}
 
@@ -147,7 +149,7 @@ public with sharing class ConvertLeadController {
 		return navigateRecId;
 	}
 
-	//update Company Account Field
+	//update Company Account Field on the lead object  if the to__account is selected and the field is empty 
 	public static void associateLeadToAccount(List<Id> leadIds, Id accountId) {
 		List<Lead> leadsToUpdate = new List<Lead>();
 		for(Id leadId: leadIds) leadsToUpdate.add(new Lead(Id = leadId, Associated_Account__c = accountId));

@@ -78,14 +78,14 @@
 							<template if:false ={oppToggle}>
 								<lightning-layout>
 									<lightning-layout-item class="slds-size_8-of-12">
-										<lightning-input value={opportunitySelectedName} label="Opportunity Name" onchange={changeOppName} required={oppInputReq} style={showOppDetails}></lightning-input> <!---->
+										<lightning-input value={opportunitySelectedName} label="Opportunity Name" onchange={changeOppName} required={oppInputReq} style={showOppDetails}></lightning-input> 
 									</lightning-layout-item>
 								</lightning-layout>
 							</template>
 					</lightning-layout-item>
 				</lightning-layout>
 				<template if:true={recordId}>
-					<c-lead-Convert-Datatable record-id={recordId} associated-account-id={associatedAccountId}  no-create-opp={noCreatingOpp} onconvert={handleConvert} ></c-lead-Convert-Datatable>
+					<c-lead-Convert-Datatable record-id={recordId} associated-account-id={associatedAccountId} no-create-opp={noCreatingOpp} onconvert={handleConvert} ></c-lead-Convert-Datatable>
 				</template>
 			</div>
 		</div>

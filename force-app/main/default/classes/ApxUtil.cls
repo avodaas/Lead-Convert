@@ -341,7 +341,7 @@ public class ApxUtil{
 
 
     // the fucntions gets a list of LeadConvertResult and logs down all the conversions that faild
-    public static String AvodaasLogsLcrErrors(List<Database.LeadConvertResult> lcrs) {
+    public static String errorLogsLcrErrors(List<Database.LeadConvertResult> lcrs) {
         String errMsg = '';
         Avodaas_Logs__c log;
         List<Avodaas_Logs__c> errorLogs = new List<Avodaas_Logs__c>();
@@ -352,7 +352,7 @@ public class ApxUtil{
             for (Database.Error error : lcr.getErrors()) errMsg += 'Status: ' + error.getStatusCode() + ', Error msg: ' + error.getMessage() + ' \n\n';
         }
         if(!errorLogs.isEmpty()) insert errorLogs;
-        ApxUtil.sendAdminEmail('ApxUtil::AvodaasLogsLcrErrors', errMsg);
+        ApxUtil.sendAdminEmail('ApxUtil::errorLogsLcrErrors', errMsg);
         return errMsg;
     }
 
