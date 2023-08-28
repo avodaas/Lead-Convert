@@ -46,6 +46,7 @@ export default class AutocompleteSearchServer extends LightningElement {
 		this.selectedName = event.detail.value;
 		this.showoptions = false;  
 	}  
+
 	// key change on the text field  
 	handleKeyChange(event) {
 		let value = event.target.value.trim();
@@ -56,6 +57,7 @@ export default class AutocompleteSearchServer extends LightningElement {
 			}, 500);
 		} 
 	}
+
 	// every time input changes including clicking x
 	inputChanged(event) {
 		if(this.searchDisabled) {
@@ -70,6 +72,7 @@ export default class AutocompleteSearchServer extends LightningElement {
 			this.dispatchEvent(changedEvent);
 		}
 	}
+
 	@api handleClear(){
 		this.searchString = '';
 		this.selectedName = '';
@@ -77,6 +80,7 @@ export default class AutocompleteSearchServer extends LightningElement {
 		const changedEvent = new CustomEvent('unlookupselect');
 		this.dispatchEvent(changedEvent);
 	}
+	
 	combineRecordValues(data){
 		let recordMap = new Map();
 		data.forEach(rec =>{

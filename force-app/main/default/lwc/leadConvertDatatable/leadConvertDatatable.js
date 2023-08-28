@@ -9,7 +9,7 @@ import { NavigationMixin } from 'lightning/navigation';
 
 const OPP_PREFIX = '006';
 const FIELDS_TO_RETRIEVE  = ['Lead.Company', 'Lead.Website'];
-export default class LeadConvertDatatable extends NavigationMixin(LightningElement)  { //
+export default class LeadConvertDatatable extends NavigationMixin(LightningElement)  { 
 
     isOppValid;
 
@@ -29,7 +29,7 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
     leads = [];
     showDataTable = false;
     draftValues = [];
-    @track wireResult;
+    wireResult;
     isConvertAll = false;
     isOppAll = false;
 
@@ -64,11 +64,9 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
 
     @wire(getLeads, {associatedAccountId: '$associatedAccountId', companyName: '$companyName', website: '$companyWebsite', currentLeadId: '$recordId' })
     wiredLeads(result){
-        console.log('json' + JSON.stringify(result));
         this.wireResult = result;
         const { data, error } = result;
         if(data) {
-            console.log('json data' + JSON.stringify(data));
             let selectedToConvert = 0;
             let selectedToOpps = 0;
             this.leads = data.map(row => {
@@ -118,7 +116,6 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
         
         updateRecordLead({leads: recordInputs})
         .then(() => {
-            console.log('sucsess updateing Leads');
             this.isLoading = false;
             if(this.isOppValid == true) showToastMessage(this, 'Success', 'All leads were updated ', SUCCESS);
             else showToastMessage(this, 'Error', 'You can only add a lead to the opportunity if you choose to convert it.', ERROR);
@@ -127,7 +124,6 @@ export default class LeadConvertDatatable extends NavigationMixin(LightningEleme
             return refreshApex(this.wireResult); // Display fresh data in the datatable
         }).catch(error => {
             this.isLoading = false;
-            console.log('error ' + JSON.stringify(error));
             showToastMessage(this, 'Error', 'Error updating leads ' + error, ERROR);
             this.showConvert = true;
         });

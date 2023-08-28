@@ -10,12 +10,10 @@
                       </div>
                           <template if:true={showoptions}>  
                               <template if:true={records}>
-                         
                                   <div id="listbox-id-2" class="slds-dropdown  slds-dropdown_fluid" role="listbox">
                                       <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                           <template for:each={records} for:item="record">
                                               <template if:true={record}>
-                                                   <!--{record.Id}-->
                                                   <c-look-up-item-server  key={record.Id} record={record} onlookupselect={handlelookupselect} ></c-look-up-item-server> 
                                                </template>  
                                           </template>

@@ -12,7 +12,7 @@ public with sharing class ConvertLeadController {
 			AND IsConverted = false AND Id != :currentLeadId  WITH SECURITY_ENFORCED];
 	}
 	
-// returns all Opportunities that the account Id = accId	
+	// returns all Opportunities that the account Id = accId	
 	@AuraEnabled(cacheable=true)
 	public static List<Opportunity> getAccRelatedOpps(String accId){
 		if(String.isBlank(accId)) return new List<Opportunity>();
@@ -27,7 +27,7 @@ public with sharing class ConvertLeadController {
 	}
 
 
-  /*
+  	/*
     * searches (using SOSL) for all contacts with that matces the filters 
     */
 	@AuraEnabled(cacheable=true)

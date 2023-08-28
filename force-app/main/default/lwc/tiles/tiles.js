@@ -65,7 +65,7 @@ export default class Tiles extends LightningElement {
             apiFields.forEach(ele => {
                 if(!rec.hasOwnProperty(ele)) curRec.push({label: this._fieldsToDisplay[ele], value: '', displayField : true});
             });
-            let curRecWithId = {Id : rec.Id, fields : curRec}; // {Id : 999, fields : [{"label":"Id","value":"0030500000PuYAqAAN","displayField":false}]};
+            let curRecWithId = {Id : rec.Id, fields : curRec};
             this.runningRecords.unshift(curRecWithId); 
         });
         if(this.runningRecords.length > 0) this.showTiles = true;

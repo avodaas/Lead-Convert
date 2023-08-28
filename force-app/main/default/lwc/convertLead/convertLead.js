@@ -1,7 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getRecord, getFieldValue} from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { SUCCESS, ERROR, addMonths, formatDate, formValid, showToastMessage } from 'c/jsUtils';
+import { SUCCESS, ERROR, validateSections, formValid, showToastMessage } from 'c/jsUtils';
 
 import getAccRelatedOpps from '@salesforce/apex/ConvertLeadController.getAccRelatedOpps';
 import getSOSLRecords from '@salesforce/apex/ConvertLeadController.getSOSLRecords'; 
@@ -46,6 +46,7 @@ const TEXT_MATCHING_CONTACTS = ' potential matches';
 const CONTACT_FIELDS_TO_DISPLAY = [CONTACT_NAME.fieldApiName, CONTACT_ACCOUNTID.fieldApiName, CONTACT_PHONE.fieldApiName, CONTACT_EMAIL.fieldApiName, CONTACT_TITLE.fieldApiName];
 const OPP_FIELDS_TO_DISPLAY = [OPPORTUNITY_NAME_FIELD.fieldApiName, OPPORTUNITY_CREATEDDATE_FIELD.fieldApiName, OPPORTUNITY_STAGE_FIELD.fieldApiName, OPPORTUNITY_AMOUNT_FIELD.fieldApiName];
 
+const RECORD_LIMIT = 10;
 export default class ConvertLead extends LightningElement {
 	selectedAccountId; //selected Account Id
 	selectedOppId = null; //selected opportunity Id
@@ -113,11 +114,10 @@ export default class ConvertLead extends LightningElement {
 	}
 
 	// get matching contacts by email
-	@wire(getSOSLRecords, {searchString: '$leEmail', fieldType: 'Email', selectedSObject: 'Contact', fieldsToReturn: CONTACT_FIELDS, recordLimit: 10})
+	@wire(getSOSLRecords, {searchString: '$leEmail', fieldType: 'Email', selectedSObject: CONTACT_OBJECT, fieldsToReturn: CONTACT_FIELDS, recordLimit: RECORD_LIMIT})
 	getcontacts({data, error}){
 		if (data){
 			this.matchingContacts = data;
-			console.log('matching Contacts' + JSON.stringify(this.matchingContacts));
 		} 
 		else if (error) console.log('error getting contact list:' + JSON.stringify(error));
 	}
@@ -450,19 +450,11 @@ export default class ConvertLead extends LightningElement {
 	updateCreateOppandAcc(){
 		let accInput = this.getAccount();
 		let oppInput = this.getOpportunity();
-		if(!this.validateSections(this.conToggle, this.selectedConId, 'Please Select/Check existing Contact.')) return;
-		if(!this.validateSections(this.accToggle, this.selectedAccountId, 'Please Select existing Account.')) return;
-		if(!this.noCreatingOpp && !this.validateSections(this.oppToggle, this.selectedOppId, 'Please Select existing Opportunity.')) return;
+		if(!validateSections(this.conToggle, this.selectedConId, 'Please Select/Check existing Contact.')) return;
+		if(!validateSections(this.accToggle, this.selectedAccountId, 'Please Select existing Account.')) return;
+		if(!this.noCreatingOpp && !validateSections(this.oppToggle, this.selectedOppId, 'Please Select existing Opportunity.')) return;
 		let conId = this.selectedConId;
 		this.template.querySelector('c-lead-Convert-Datatable').convertToLead(accInput, oppInput, conId);
-	}
-	
-	validateSections(toggleEle, selectedId, message){
-		if (toggleEle && !selectedId){ //  select exsting && selectedAccountId = flase
-			showToastMessage(this, 'Error', message, ERROR);
-			return false;
-		}
-		return true;
 	}
 
 	setupNewAccount(fields){

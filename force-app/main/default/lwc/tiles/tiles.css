@@ -1,9 +1,6 @@
 .tile-record {
-    /*border: solid 1px #ccc;*/
     padding-block: 10px;
     padding-inline: 10px;
-    /*height: 130px;
-    width: 140px;*/
 }
 
 .on-tile-over {

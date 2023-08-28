@@ -21,6 +21,7 @@ function showToastMessage(lwc, title, message, variant){
         })
     );
 }
+
 /**
  * @description: add months to a given date
  * @name addMonths
@@ -55,6 +56,20 @@ function showToastMessage(lwc, title, message, variant){
 }
 
 /**
+ * @description: checks if one of the elements from the toggle option is selected .
+ * @name validateSections
+ * @params The toggle option, the selected object id, a messege to display 
+ * @returns: Boolean 
+ * */
+function validateSections(toggleEle, selectedId, message) {
+    if (toggleEle && !selectedId){ //  select exsting && selectedAccountId = flase
+        showToastMessage(this, 'Error', message, ERROR);
+        return false;
+    }
+    return true;
+}
+
+/**
  * @description: checks if all the html elements of a specific type on the page are valid.
  * @name formValid
  * @params The LWC object, the html elemnt
@@ -67,12 +82,4 @@ function formValid(lwc, elementType){
             return (validSoFar && inputField.checkValidity());
         }, true);
 }
-
-
-
-
-
-
-
-
-export {SUCCESS, ERROR, showToastMessage, addMonths, formatDate, formValid};
+export {SUCCESS, ERROR, validateSections, showToastMessage, addMonths, formatDate, formValid};

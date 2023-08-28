@@ -45,7 +45,7 @@
 						<c-custom-radio-button option1="Create New" option2="Select Existing" onselected={changetoggle} typeobj='acc' disableoption={disableAccount} id="accid" checkedop1={checkedAC1} checkedop2={checkedAC2}></c-custom-radio-button>
 						<lightning-layout>
 							<lightning-layout-item size='8'>
-								<template if:true ={accToggle}> <!--search-disabled={accSearchDisabled}-->
+								<template if:true ={accToggle}>
 									<c-autocomplete-search-server search-label="Account"
 												search-disabled={accSearchDisabled}
 												data-id="accountId"
