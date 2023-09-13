@@ -1,0 +1,16 @@
+.tile-record {
+    padding-block: 10px;
+    padding-inline: 10px;
+}
+
+.on-tile-over {
+    cursor: pointer; 
+    background-color: #e8f3fb;
+}
+
+.on-tile-out {
+    background-color: white;
+}
+.bold-border{
+    border-color:#5193f8;
+}

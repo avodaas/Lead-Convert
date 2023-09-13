@@ -1,0 +1,15 @@
+<template>
+    <li role="presentation" class="slds-listbox__item">
+        <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-m-around_small" onclick={handleSelect} role="option">
+          <span class="slds-media__figure slds-listbox__option-icon"></span>
+          <span class="slds-media__body">
+            <template if:true={record}>
+              <span class="slds-truncate" title={record.value} key={record.Id} data-contact-id={record.Id}>{record.value}</span>
+            </template>
+            <template if:false={record}>  
+              <span>No contact data available.</span>  
+            </template>
+          </span>
+        </div>
+      </li>     
+</template>

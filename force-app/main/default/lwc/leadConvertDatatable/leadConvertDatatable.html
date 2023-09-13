@@ -1,0 +1,40 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner title='Loading' alternative-text="Loading" variant="brand"></lightning-spinner>
+    </template>
+    <lightning-card>
+        <div class="slds-p-left_small slds-p-right_small" >
+            <h2><b>Select Associated Leads To Convert</b></h2>
+            <br/>
+            <template if:true={showDataTable}>
+                <lightning-datatable 
+                                    data={leads}
+                                    columns={columnsList} 
+                                    key-field="Id" 
+                                    onsave={handleSave}
+                                    oncancel={handleCancel}
+                                    draft-values={draftValues}
+                                    onchange={handleKeyUp}
+                                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+            <template if:false={showDataTable}>
+                <div class="slds-text-align_center slds-text-heading_medium">There are no other related Leads</div>
+            </template>
+            <br/>
+            <template if:true={showConvert}>
+                <lightning-layout>
+                    <lightning-layout-item class="slds-p-right_small">
+                        <lightning-button label={markAllLabelConvert} class="slds-p-bottom_large" onclick={selectAllLeadsToConvert}></lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item>
+                        <lightning-button label={markAllLabelOpp} class="slds-p-bottom_large" onclick={selectAllLeadsToOpp}></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <div class="slds-align_absolute-center slds-p-bottom_xx-large"> 
+                    <lightning-button class="slds-align_absolute-center" variant="brand" label="Convert Lead(s)" onclick={fireConvertEvent}></lightning-button>
+                </div> 
+            </template>
+        </div>
+    </lightning-card> 
+</template>

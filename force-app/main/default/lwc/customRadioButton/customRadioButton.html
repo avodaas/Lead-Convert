@@ -1,0 +1,29 @@
+<template>
+	<fieldset class="slds-form-element" disabled={disableoption}>
+		<div class="slds-form-element__control" >
+		<lightning-layout>
+			<lightning-layout-item>
+				<span class="slds-radio">
+					<input type="radio" id="radio-41" value={option1} name={typeobj} checked={checkedop1} onchange={changeval} />
+					<label class="slds-radio__label" for="radio-41">
+					<span class="slds-radio_faux"></span>
+					<span class="slds-form-element__label">{option1}</span>
+					</label>
+				</span>
+			</lightning-layout-item>
+		    <template if:false={hideOption2}> 
+				<label class="slds-p-right_x-small">OR</label>
+					<lightning-layout-item >
+						<span class="slds-radio">
+							<input type="radio" id="radio-42" value={option2} name={typeobj} checked={checkedop2} onchange={changeval} />
+							<label class="slds-radio__label" for="radio-42">
+							<span class="slds-radio_faux"></span>
+							<span class="slds-form-element__label">{option2}</span>
+							</label>
+						</span>
+					</lightning-layout-item>
+				</template>
+		</lightning-layout>
+		</div>
+	</fieldset>
+</template>
